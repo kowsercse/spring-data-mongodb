@@ -83,10 +83,11 @@ public class PerformanceTests {
 		SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(this.mongo, DATABASE_NAME);
 		this.operations = new MongoTemplate(simpleMongoDbFactory);
 
-		MappingMongoConverter mappingMongoConverter = new MappingMongoConverter(simpleMongoDbFactory,new ProfiledMongoMappingContext());
+		MappingMongoConverter mappingMongoConverter = new MappingMongoConverter(simpleMongoDbFactory,
+				new ProfiledMongoMappingContext());
 		mappingMongoConverter.setTypeMapper(new ProfiledDefaultMongoTypeMapper());
 		mappingMongoConverter.setCustomConversions(new ProfiledCustomConversions());
-		this.profiledMongoTemplate = new MongoTemplate(simpleMongoDbFactory,mappingMongoConverter);
+		this.profiledMongoTemplate = new MongoTemplate(simpleMongoDbFactory, mappingMongoConverter);
 
 		MongoRepositoryFactoryBean<PersonRepository, Person, ObjectId> factory = new MongoRepositoryFactoryBean<PersonRepository, Person, ObjectId>();
 		factory.setMongoOperations(operations);
@@ -120,13 +121,13 @@ public class PerformanceTests {
 
 		for (int i = 0; i < 30; i++) {
 			readingUsingTemplate("Reading all objects using template");
-			readingUsingProfiledTemplate("Reading all objects using template");
+			readingUsingProfiledTemplate("Reading all objects using profiled template");
 		}
 
 		long time = 0;
 
 		for (int i = 0; i < 100; i++) {
-			readingUsingProfiledTemplate2("Reading all objects using template");
+			readingUsingProfiledTemplate2("Reading all objects using profiled template");
 			time += watch.getLastTaskTimeMillis();
 		}
 		long after = time / 100;
@@ -141,7 +142,7 @@ public class PerformanceTests {
 
 		System.out.println("Before ----------------------------> " + before);
 		System.out.println("After ----------------------------> " + after);
-		System.out.println("Diff ----------------------------> " + (100 - ((double) after / (double) before) * 100.0) + "%");
+		System.out.println("Diff ----------------------------> " + (100 - (double) after / (double) before * 100.0) + "%");
 	}
 
 	@Test
